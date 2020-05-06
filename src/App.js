@@ -4,10 +4,11 @@ import { Query } from 'react-apollo';
 import client from './client';
 import { SEARCH_REPOSITORIES } from './graphql';
 
+const PER_PAGE = 5;
 const DEFAULT_STATE = {
   after: null,
   before: null,
-  first: 5,
+  first: PER_PAGE,
   last: null,
   query: 'フロントエンドエンジニア',
 };
@@ -29,6 +30,15 @@ class App extends React.Component {
     e.preventDefault();
   }
 
+  goNext(search) {
+    this.setState({
+      first: PER_PAGE,
+      after: search.pageInfo.endCursor,
+      last: null,
+      before: null,
+    });
+  }
+
   render() {
     const { query, first, last, before, after } = this.state;
     console.log({ query });
@@ -46,7 +56,6 @@ class App extends React.Component {
           {({ loading, error, data }) => {
             if (loading) return 'loadng...';
             if (error) return `Error! ${error.message}`;
-            console.log(data.search);
             const search = data.search;
             const repositoryCount = search.repositoryCount;
             const repositoryUnit =
@@ -60,13 +69,21 @@ class App extends React.Component {
                     const node = edge.node;
                     return (
                       <li key={node.id}>
-                        <a href={node.url} target="_blank">
+                        <a
+                          href={node.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {node.name}
                         </a>
                       </li>
                     );
                   })}
                 </ul>
+
+                {search.pageInfo.hasNextPage === true ? (
+                  <button onClick={this.goNext.bind(this, search)}>Next</button>
+                ) : null}
               </React.Fragment>
             );
           }}
