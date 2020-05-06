@@ -46,8 +46,13 @@ class App extends React.Component {
           {({ loading, error, data }) => {
             if (loading) return 'loadng...';
             if (error) return `Error! ${error.message}`;
-            console.log({ data });
-            return <div></div>;
+            console.log(data.search);
+            const search = data.search;
+            const repositoryCount = search.repositoryCount;
+            const repositoryUnit =
+              repositoryCount === 1 ? 'Repository' : 'Repositories';
+            const title = `GigHub Repositories Search Resuluts - ${repositoryCount} ${repositoryUnit}`;
+            return <h2>{title}</h2>;
           }}
         </Query>
       </ApolloProvider>
