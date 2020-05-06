@@ -15,8 +15,8 @@ const headersLink = new ApolloLink((operation, foward) => {
 });
 
 const endpoint = 'https://api.github.com/graphql';
-const httpLing = new HttpLink({ uri: endpoint });
-const link = ApolloLink.from([headersLink, httpLing]);
+const httpLink = new HttpLink({ uri: endpoint });
+const link = ApolloLink.from([headersLink, httpLink]);
 
 export default new ApolloClient({
   link,
